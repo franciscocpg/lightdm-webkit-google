@@ -3,7 +3,7 @@
 */
 if (!('lightdm' in window)) {
     window.lightdm = {};
-    lightdm.hostname ="test-host";
+    lightdm.hostname = "test-host";
     lightdm.languages = [
         {
             code: "en_US",
@@ -21,7 +21,7 @@ if (!('lightdm' in window)) {
         {
             name: "test",
             short_description: "test description",
-            short_description:"really long epic description"
+            short_description: "really long epic description"
         }
     ];
     lightdm.default_layout = lightdm.layouts[0];
@@ -70,7 +70,7 @@ if (!('lightdm' in window)) {
         },
         {
             name: "peterp",
-            real_name:"Spiderman",
+            real_name: "Spiderman",
             display_name: "Peter Parker",
             image: "",
             language: "en_US",
@@ -80,36 +80,48 @@ if (!('lightdm' in window)) {
         }
     ];
 
+    lightdm.default_session = "gnome";
+
+    lightdm.sessions = [
+        {
+            key: "gnome",
+            name: "GNOME"
+        },
+        {
+            key: "xfce",
+            name: "XFCE"
+        }
+    ]
+
     lightdm.num_users = lightdm.users.length;
     lightdm.timed_login_delay = 0; // increase to simulate timed_login_delay
     lightdm.timed_login_user =
         lightdm.timed_login_delay > 0 ? lightdm.users[0] : null;
 
-    lightdm.get_string_property = function () {};
-    lightdm.get_integer_property = function () {};
-    lightdm.get_boolean_property = function () {};
+    lightdm.get_string_property = function () { };
+    lightdm.get_integer_property = function () { };
+    lightdm.get_boolean_property = function () { };
     lightdm.cancel_timed_login = function () {
         _lightdm_mock_check_argument_length(arguments, 0);
 
-        lightdm._timed_login_cancelled= true;
+        lightdm._timed_login_cancelled = true;
     };
 
     lightdm.provide_secret = function (secret) {
-        if (typeof lightdm._username == 'undefined' || !lightdm._username) {
+        if (typeof lightdm._username === 'undefined' || !lightdm._username) {
             throw "must call start_authentication first"
         }
         _lightdm_mock_check_argument_length(arguments, 1);
 
-        var user = _lightdm_mock_get_user(lightdm.username);
+        var user = _lightdm_mock_get_user(lightdm._username);
 
         // That's right, passwords are the same as the username's!
-        if (!user && secret == lightdm._username) {
+        if (user && secret === lightdm._username) {
             lightdm.is_authenticated = true;
-            lightdm.authentication_user = user;
+            lightdm.authentication_user = lightdm._username;
         } else {
             lightdm.is_authenticated = false;
             lightdm.authentication_user = null;
-            lightdm._username = null;
         }
 
         authentication_complete();
@@ -132,9 +144,6 @@ if (!('lightdm' in window)) {
     lightdm.cancel_authentication = function () {
         _lightdm_mock_check_argument_length(arguments, 0);
 
-        if (!lightdm._username) {
-            throw "we are not authenticating";
-        }
         lightdm._username = null;
     };
 
@@ -191,8 +200,8 @@ var _lightdm_mock_check_argument_length = function (args, length) {
 var _lightdm_mock_get_user = function (username) {
     var user = null;
     for (var i = 0; i < lightdm.users.length; ++i) {
-        if (lightdm.users[i].name == username) {
-            user= lightdm.users[i];
+        if (lightdm.users[i].name === username) {
+            user = lightdm.users[i];
             break;
         }
     }

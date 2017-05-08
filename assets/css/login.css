@@ -118,7 +118,12 @@ body {
     margin-bottom: 0;
 }
 #pass {
-    margin-top: -1px;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+#session {
+    margin-top: -10px;
+    margin-bottom: 0;
 }
 .btn {
     outline: 0;
