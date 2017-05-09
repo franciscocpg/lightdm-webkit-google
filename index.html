@@ -1,24 +1,31 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="assets/css/login.css" />
 </head>
+
 <body>
     <div class="wrapper">
         <div class="card signin-card">
-            <img
-                class="profile-img"
-                src="assets/ui/avatar_2x.png"
-            />
+            <img class="profile-img" src="assets/ui/avatar_2x.png" />
             <form>
                 <select id="session" tabindex="1">
                 </select>
-                <select id="user" tabindex="2"/>
+                <select id="user" tabindex="2" />
                 </select>
-                <input id="pass" placeholder="Password" type="password" tabindex="2"/>
+                <input id="pass" placeholder="Password" type="password" tabindex="2" />
+                <div id="statusArea" class="status">
+                    <table border="0" align="center">
+                        <tr>
+                            <td><span style="font-size: 100%" >Authentication failed</span></td>
+                        </tr>
+                    </table>
+                </div>
                 <button type="submit" tabindex="3" class="btn btn-primary">
-                    Sign in
+                    <div id="signin">Sign in</div>
+                    <img id="loading" style="display: none" src="assets/ui/loading.gif"></img>
                 </button>
             </form>
         </div>

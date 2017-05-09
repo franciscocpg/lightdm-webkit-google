@@ -54,6 +54,9 @@ body {
     border: 1px solid #c0c0c0;
     outline: none;
 }
+.status {
+    color: red;
+}
 .card label {
     font-weight: bold;
     display: block;
@@ -119,11 +122,15 @@ body {
 }
 #pass {
     margin-top: 0;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
 }
 #session {
     margin-top: -10px;
     margin-bottom: 0;
+}
+#statusArea {
+    margin-top: 0;
+    margin-bottom: 5px;
 }
 .btn {
     outline: 0;
@@ -180,6 +187,12 @@ body {
     background-color: #357ae8;
     background-image: -webkit-linear-gradient(top, #4d90fe, #357ae8);
     background-image: linear-gradient(top, #4d90fe, #357ae8);
+}
+#loading {
+    height: auto; 
+    width: auto; 
+    max-width: 32x; 
+    max-height: 32px;
 }
 .buttons-wrap {
     float: right;

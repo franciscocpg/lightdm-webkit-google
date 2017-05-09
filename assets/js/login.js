@@ -4,6 +4,9 @@ var login = (function (lightdm, $) {
     var $user = $('#user');
     var $pass = $('#pass');
     var $session = $('#session');
+    var $status_area = $('#statusArea');
+    var $signin = $('#signin');
+    var $loading = $('#loading');
     var cache_backend = null;
 
     // private functions
@@ -71,32 +74,32 @@ var login = (function (lightdm, $) {
 
         return res;
     }
-    setup_cache_backend = function() {
-		// Do we have access to localStorage?
-		try {
-			localStorage.setItem('testing', 'test');
-			let test = localStorage.getItem('testing');
+    setup_cache_backend = function () {
+        // Do we have access to localStorage?
+        try {
+            localStorage.setItem('testing', 'test');
+            let test = localStorage.getItem('testing');
 
-			if ('test' === test) {
-				// We have access to localStorage
-				cache_backend = 'localStorage';
-			}
-			localStorage.removeItem('testing');
+            if ('test' === test) {
+                // We have access to localStorage
+                cache_backend = 'localStorage';
+            }
+            localStorage.removeItem('testing');
 
-		} catch(err) {
-			// We do not have access to localStorage. Fallback to cookies.
-			show_error(err);
-			show_error('INFO: localStorage is not available. Using cookies for cache backend.');
-			cache_backend = 'Cookies';
-		}
+        } catch (err) {
+            // We do not have access to localStorage. Fallback to cookies.
+            show_error(err);
+            show_error('INFO: localStorage is not available. Using cookies for cache backend.');
+            cache_backend = 'Cookies';
+        }
 
-		// Just in case...
-		if ('' === cache_backend) {
-			cache_backend = 'Cookies';
-		}
+        // Just in case...
+        if ('' === cache_backend) {
+            cache_backend = 'Cookies';
+        }
 
-		show_prompt(`cache_backend is: ${cache_backend}`);
-	}
+        show_prompt(`cache_backend is: ${cache_backend}`);
+    }
     var setup_users_list = function () {
         var $list = $user;
         var to_append = null;
@@ -159,6 +162,15 @@ var login = (function (lightdm, $) {
         }
         $session.val(selected_session);
     }
+    var loading = function (loading) {
+        if (loading) {
+            $signin.hide();
+            $loading.show();
+        } else {
+            $signin.show();
+            $loading.hide();
+        }
+    };
 
     // Functions that lightdm needs
     window.start_authentication = function (username) {
@@ -166,14 +178,17 @@ var login = (function (lightdm, $) {
         lightdm.start_authentication(username);
     };
     window.provide_secret = function () {
+        $status_area.fadeTo(0, 0);
         password = $pass.val() || null;
 
         if (password !== null) {
+            loading(true);
             lightdm.provide_secret(password);
         }
     };
     window.authentication_complete = function () {
         show_prompt(`Authentication complete ${lightdm.is_authenticated}`);
+        loading(false);
         if (lightdm.is_authenticated) {
             var selected_session = $session.val();
             show_prompt(`Authentication complete ${lightdm.authentication_user}`);
@@ -184,6 +199,7 @@ var login = (function (lightdm, $) {
                 selected_session
             );
         } else {
+            $status_area.fadeTo(0, 1);
             select_user_from_list();
         }
     };
@@ -203,6 +219,7 @@ var login = (function (lightdm, $) {
             setup_users_list();
             setup_session_list();
             select_user_from_list();
+            $status_area.fadeTo(0, 0);
 
             $user.on('change', function (e) {
                 e.preventDefault();
